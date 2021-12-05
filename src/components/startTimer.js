@@ -59,9 +59,9 @@ export default () => {
 
             case (!(isTimers.getReadyTimer) && (isTimers.exerciseTimer) && !(isTimers.restTimer)): {
                 exercise = setInterval(() => {
-                    countExercise -=1;
                     setTimersValue({exerciseValue:countExercise});
-                    if (countExercise === 0) {
+                    countExercise -=1;
+                    if (countExercise === -1) {
                         clearInterval(exercise);
                         setIsTimers({ getReadyTimer: false, exerciseTimer: false, restTimer: true })
                     }
@@ -71,9 +71,9 @@ export default () => {
 
             case ((isTimers.restTimer)): {
                 rest = setInterval(() => {
-                    countRest -=1;
                     setTimersValue({ restValue: countRest});
-                    if (countRest === 0) {
+                    countRest -=1;
+                    if (countRest === -1) {
                         clearInterval(rest);
                         setIsTimers({ getReadyTimer: false, exerciseTimer: false, restTimer: false })
                     }

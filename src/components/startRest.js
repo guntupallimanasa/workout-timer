@@ -45,6 +45,7 @@ export default () => {
                         getValue--;
                         clearInterval(rest);
                         setIsTimers({ restTimer: false })
+                       
                         if(getValue>0){
                             setLocalval(getValue)
                         window.localStorage.setItem('setVal', getValue);

@@ -6,79 +6,51 @@ export default () => {
     const history = useHistory();
     const location = useLocation();
     const { initialValue } = location.state;
-    let { set } = initialValue;
+    let aa = window.localStorage.getItem('setVal');
     const [isTimers, setIsTimers] = useState({
-        exerciseTimer: true,
-        restTimer: false
+        exerciseTimer: true
     })
-    let setValue;
-    let getValue;
-
+ 
     const [timersValue, setTimersValue] = useState({
-        exerciseValue: initialValue.exercise,
-        restValue: initialValue.rest
+        exerciseValue: initialValue.exercise
     })
-
-    const [localVal, setLocalval] = useState(0)
 
     const displayHandler = () => {
         switch (true) {
             case ((isTimers.exerciseTimer)): {
                 return timersValue.exerciseValue
             }
-            case ((isTimers.restTimer)): {
-                return timersValue.restValue
-            }
+           
             default:
                 console.log("soryyyyyyy");
         }
     }
     useEffect(() => {
         let countExercise = initialValue.exercise;
-        let countRest = initialValue.rest;
         let exercise = null;
-        let rest = null;
         switch (true) {
-            case ((isTimers.exerciseTimer) && !(isTimers.restTimer)): {
+            case ((isTimers.exerciseTimer)): {
                 exercise = setInterval(() => {
                     setTimersValue({exerciseValue:countExercise});
                     countExercise -=1;
                     if (countExercise === -1) {
                         clearInterval(exercise);
-                        setIsTimers({ exerciseTimer: false, restTimer: true })
+                        setIsTimers({ exerciseTimer: false})
+                        history.push('/startrest',{initialValue});
+
                     }
                 }, 1000);
             }
                 break;
 
-            case ((isTimers.restTimer)): {
-                setValue = window.localStorage.setItem('name', set);
-                rest = setInterval(() => {
-                    setTimersValue({ restValue: countRest});
-                    countRest -=1;
-                    if (countRest === -1) {
-                        getValue = window.localStorage.getItem('name');
-                        clearInterval(rest);
-                        setIsTimers({ exerciseTimer: false, restTimer: false })
-                        if(localVal>=0){
-                            getValue--;
-                            set = getValue;
-                            setLocalval(getValue)
-                            history.push('/startExercise',{initialValue});
-                        }
-                    }
-                }, 1000);
-            }
-                break;
             default:
                 console.log("soryyyyyyy");
         }
 
         return () => {
             clearInterval(exercise);
-            clearInterval(rest);
         }
-    }, [isTimers.exerciseTimer, isTimers.restTimer]);
+    }, [isTimers.exerciseTimer]);
 
     const stopHandler = () => {
         history.push('/')
@@ -86,13 +58,13 @@ export default () => {
     return <div>
         <h1>{initialValue.title}</h1>
         <h3>{
-            (isTimers.exerciseTimer) && !(isTimers.restTimer) && 'Exercise.....'
+            (isTimers.exerciseTimer) && 'Exercise.....'
         }
         </h3>
-        <h3>{
-            !(isTimers.exerciseTimer) && (isTimers.restTimer) && 'Relax.....'
-        }
-        </h3>
+        <br />
+       {
+           `${aa}/${initialValue.set}`
+       }
         <div className='timer'>
             {
             displayHandler()

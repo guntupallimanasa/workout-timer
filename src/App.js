@@ -9,6 +9,7 @@ import {
 import StartTimer from "./components/startTimer";
 import Dashboard from './components/dashboard';
 import StartExercise from './components/startExercise';
+import StartRest from './components/startRest';
 
 function App() {
  
@@ -20,6 +21,9 @@ function App() {
         </Route>
         <Route exact path="/startExercise">
           <StartExercise />
+        </Route>
+        <Route exact path="/startRest">
+          <StartRest />
         </Route>
         <Route exact path="/">
           <Dashboard />

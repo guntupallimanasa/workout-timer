@@ -6,43 +6,52 @@ export default () => {
     const history = useHistory();
     const location = useLocation();
     const { initialValue } = location.state;
+    let { set } = initialValue;
     const [isTimers, setIsTimers] = useState({
-        getReadyTimer: true,
+        restTimer: true
     })
+    let setValue;
+    let getValue;
+
+    let aa = window.localStorage.getItem('setVal');
+
 
     const [timersValue, setTimersValue] = useState({
-        getReadyValue: 3,
+        restValue: initialValue.rest
     })
 
-    const displayHandler = () => {
+    const [localVal, setLocalval] = useState(0)
 
+    const displayHandler = () => {
         switch (true) {
-            case ((isTimers.getReadyTimer)): {
-                return timersValue.getReadyValue;
+            case ((isTimers.restTimer)): {
+                return timersValue.restValue
             }
-            
             default:
                 console.log("soryyyyyyy");
         }
     }
-
     useEffect(() => {
-        let setGoValue = 3
-       
-        let ready = null;
-
+        let countRest = initialValue.rest;
+        let rest = null;
         switch (true) {
-            case ((isTimers.getReadyTimer)): {
-                ready = setInterval(() => {
-                    setGoValue -= 1;
-                    setTimersValue({ getReadyValue:setGoValue });
-                    if (setGoValue === 0) {
-                        clearInterval(ready);
-                        setIsTimers({ getReadyTimer: false });
-                        window.localStorage.setItem('setVal', initialValue.set);
-                        history.push('/startExercise',{initialValue});
+           
+            case ((isTimers.restTimer)): {
+                rest = setInterval(() => {
+                    setTimersValue({ restValue: countRest});
+                    countRest -=1;
+                    if (countRest === -1) {
+                        getValue = window.localStorage.getItem('setVal');
+                        getValue--;
+                        clearInterval(rest);
+                        setIsTimers({ restTimer: false })
+                        if(getValue>0){
+                            setLocalval(getValue)
+                        window.localStorage.setItem('setVal', getValue);
+                            history.push('/startExercise',{initialValue});
+                        }
                     }
-                }, 1000)
+                }, 1000);
             }
                 break;
             default:
@@ -50,19 +59,23 @@ export default () => {
         }
 
         return () => {
-            clearInterval(ready);
+            clearInterval(rest);
         }
-    }, [isTimers.getReadyTimer]);
+    }, [isTimers.restTimer]);
 
     const stopHandler = () => {
         history.push('/')
     }
     return <div>
         <h1>{initialValue.title}</h1>
+      
         <h3>{
-            (isTimers.getReadyTimer) && 'Get Ready...'
+            (isTimers.restTimer) && 'Relax.....'
         }
         </h3>
+        {
+            `${aa}/${initialValue.set}`
+       }
         <div className='timer'>
             {
             displayHandler()

@@ -8,28 +8,19 @@ export default () => {
     const { initialValue } = location.state;
     const [isTimers, setIsTimers] = useState({
         getReadyTimer: true,
-        exerciseTimer: false,
-        restTimer: false
     })
 
     const [timersValue, setTimersValue] = useState({
         getReadyValue: 3,
-        exerciseValue: initialValue.exercise,
-        restValue: initialValue.rest
     })
 
     const displayHandler = () => {
 
         switch (true) {
-            case ((isTimers.getReadyTimer) && !(isTimers.exerciseTimer) && !(isTimers.restTimer)): {
+            case ((isTimers.getReadyTimer)): {
                 return timersValue.getReadyValue;
             }
-            case ((isTimers.exerciseTimer)): {
-                return timersValue.exerciseValue
-            }
-            case ((isTimers.restTimer)): {
-                return timersValue.restValue
-            }
+            
             default:
                 console.log("soryyyyyyy");
         }
@@ -37,47 +28,20 @@ export default () => {
 
     useEffect(() => {
         let setGoValue = 3
-        let countExercise = initialValue.exercise;
-        let countRest = initialValue.rest;
-
+       
         let ready = null;
-        let exercise = null;
-        let rest = null;
 
         switch (true) {
-            case ((isTimers.getReadyTimer) && !(isTimers.exerciseTimer) && !(isTimers.restTimer)): {
+            case ((isTimers.getReadyTimer)): {
                 ready = setInterval(() => {
                     setGoValue -= 1;
                     setTimersValue({ getReadyValue:setGoValue });
                     if (setGoValue === 0) {
                         clearInterval(ready);
-                        setIsTimers({ getReadyTimer: false, exerciseTimer: true, restTimer: false })
+                        setIsTimers({ getReadyTimer: false });
+                        history.push('/startExercise',{initialValue});
                     }
                 }, 1000)
-            }
-                break;
-
-            case (!(isTimers.getReadyTimer) && (isTimers.exerciseTimer) && !(isTimers.restTimer)): {
-                exercise = setInterval(() => {
-                    setTimersValue({exerciseValue:countExercise});
-                    countExercise -=1;
-                    if (countExercise === -1) {
-                        clearInterval(exercise);
-                        setIsTimers({ getReadyTimer: false, exerciseTimer: false, restTimer: true })
-                    }
-                }, 1000);
-            }
-                break;
-
-            case ((isTimers.restTimer)): {
-                rest = setInterval(() => {
-                    setTimersValue({ restValue: countRest});
-                    countRest -=1;
-                    if (countRest === -1) {
-                        clearInterval(rest);
-                        setIsTimers({ getReadyTimer: false, exerciseTimer: false, restTimer: false })
-                    }
-                }, 1000);
             }
                 break;
             default:
@@ -86,10 +50,8 @@ export default () => {
 
         return () => {
             clearInterval(ready);
-            clearInterval(exercise);
-            clearInterval(rest);
         }
-    }, [isTimers.getReadyTimer, isTimers.exerciseTimer, isTimers.restTimer]);
+    }, [isTimers.getReadyTimer]);
 
     const stopHandler = () => {
         history.push('/')
@@ -97,15 +59,7 @@ export default () => {
     return <div>
         <h1>{initialValue.title}</h1>
         <h3>{
-            (isTimers.getReadyTimer) && !(isTimers.exerciseTimer) && !(isTimers.restTimer) && 'Get Ready...'
-        }
-        </h3>
-        <h3>{
-            !(isTimers.getReadyTimer) && (isTimers.exerciseTimer) && !(isTimers.restTimer) && 'Exercise.....'
-        }
-        </h3>
-        <h3>{
-            !(isTimers.getReadyTimer) && !(isTimers.exerciseTimer) && (isTimers.restTimer) && 'Relax.....'
+            (isTimers.getReadyTimer) && 'Get Ready...'
         }
         </h3>
         <div className='timer'>

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import StartTimer from "./components/startTimer";
 import Dashboard from './components/dashboard';
+import StartExercise from './components/startExercise';
 
 function App() {
  
@@ -16,6 +17,9 @@ function App() {
       <Switch>
         <Route exact path="/startTimer">
           <StartTimer />
+        </Route>
+        <Route exact path="/startExercise">
+          <StartExercise />
         </Route>
         <Route exact path="/">
           <Dashboard />
